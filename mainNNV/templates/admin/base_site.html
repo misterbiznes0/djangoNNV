@@ -1,0 +1,160 @@
+{% extends "admin/base_site.html" %}
+
+{% block extrastyle %}
+{{ block.super }}
+
+<style>
+    :root {
+        --primary: #4f7cff;
+        --primary-dark: #345ee8;
+        --bg: #eef3ff;
+        --card: #ffffff;
+        --text: #172033;
+        --muted: #667085;
+        --border: #dbe4ff;
+        --success: #1fbf75;
+        --danger: #ff4d6d;
+        --shadow: 0 14px 35px rgba(33, 50, 90, 0.13);
+    }
+
+    body {
+        background:
+            radial-gradient(circle at top left, rgba(79, 124, 255, 0.18), transparent 35%),
+            radial-gradient(circle at bottom right, rgba(31, 191, 117, 0.12), transparent 35%),
+            var(--bg) !important;
+        color: var(--text);
+    }
+
+    #header {
+        background: linear-gradient(135deg, #4f7cff, #6c8dff) !important;
+        color: white !important;
+        box-shadow: var(--shadow);
+    }
+
+    #branding h1,
+    #branding h1 a:link,
+    #branding h1 a:visited {
+        color: white !important;
+        font-weight: 800;
+    }
+
+    #user-tools,
+    #user-tools a {
+        color: white !important;
+    }
+
+    div.breadcrumbs {
+        background: white !important;
+        color: var(--muted) !important;
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 8px 20px rgba(33, 50, 90, 0.06);
+    }
+
+    div.breadcrumbs a {
+        color: var(--primary) !important;
+    }
+
+    #content {
+        padding: 28px !important;
+    }
+
+    .module {
+        border: 1px solid var(--border) !important;
+        border-radius: 18px !important;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        background: white !important;
+    }
+
+    .module h2,
+    .module caption,
+    .inline-group h2 {
+        background: linear-gradient(135deg, #4f7cff, #6c8dff) !important;
+        color: white !important;
+        font-weight: 800;
+    }
+
+    table {
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    th {
+        background: #f5f7ff !important;
+        color: var(--text) !important;
+    }
+
+    a:link,
+    a:visited {
+        color: var(--primary);
+    }
+
+    input[type="submit"],
+    button,
+    .button,
+    input[type="button"],
+    input[type="reset"] {
+        background: var(--primary) !important;
+        border: none !important;
+        border-radius: 12px !important;
+        padding: 10px 16px !important;
+        color: white !important;
+        font-weight: 700 !important;
+        transition: 0.2s;
+    }
+
+    input[type="submit"]:hover,
+    button:hover,
+    .button:hover {
+        background: var(--primary-dark) !important;
+        transform: translateY(-1px);
+    }
+
+    .submit-row {
+        border-radius: 18px !important;
+        background: white !important;
+        border: 1px solid var(--border) !important;
+        box-shadow: var(--shadow);
+    }
+
+    input,
+    select,
+    textarea,
+    .vTextField {
+        border-radius: 12px !important;
+        border: 1px solid var(--border) !important;
+        padding: 9px 12px !important;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 4px rgba(79, 124, 255, 0.15);
+        outline: none !important;
+    }
+
+    #changelist {
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        background: white;
+    }
+
+    #toolbar {
+        background: white !important;
+        border-bottom: 1px solid var(--border) !important;
+    }
+
+    .object-tools a {
+        background: var(--success) !important;
+        border-radius: 12px !important;
+        font-weight: 700;
+    }
+
+    .deletelink {
+        background: var(--danger) !important;
+        border-radius: 12px !important;
+    }
+</style>
+{% endblock %}

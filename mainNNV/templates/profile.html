@@ -1,0 +1,632 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль практиканта</title>
+
+    <link rel="icon" href="{% static 'logo.ico' %}">
+
+    <style>
+        :root {
+            --bg: #eef3ff;
+            --card: rgba(255, 255, 255, 0.9);
+            --card-solid: #ffffff;
+            --text: #172033;
+            --muted: #67728a;
+            --primary: #4f7cff;
+            --primary-dark: #345ee8;
+            --danger: #ff4d6d;
+            --success: #1fbf75;
+            --warning-bg: #fff1f2;
+            --warning-text: #9f1239;
+            --success-bg: #ecfdf5;
+            --success-text: #047857;
+            --border: rgba(99, 120, 160, 0.18);
+            --shadow: 0 20px 50px rgba(33, 50, 90, 0.14);
+            --radius: 22px;
+        }
+
+        body.dark-theme {
+            --bg: #0d1324;
+            --card: rgba(21, 29, 50, 0.92);
+            --card-solid: #151d32;
+            --text: #f3f7ff;
+            --muted: #a9b4cc;
+            --primary: #7c9cff;
+            --primary-dark: #5d7ef0;
+            --danger: #ff6b86;
+            --success: #38d996;
+            --warning-bg: #3a1724;
+            --warning-text: #ffb4c2;
+            --success-bg: #123728;
+            --success-text: #a7f3d0;
+            --border: rgba(255, 255, 255, 0.12);
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(79, 124, 255, 0.25), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(31, 191, 117, 0.18), transparent 35%),
+                var(--bg);
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .page {
+            width: min(1180px, calc(100% - 30px));
+            margin: 0 auto;
+            padding: 28px 0 50px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            align-items: center;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(14px);
+            margin-bottom: 22px;
+        }
+
+        .hero-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .logo {
+            width: 78px;
+            height: 78px;
+            border-radius: 22px;
+            background: white;
+            padding: 8px;
+            object-fit: contain;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .hero h1 {
+            margin: 0 0 6px;
+            font-size: 32px;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 999px;
+            padding: 12px 18px;
+            cursor: pointer;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.2s;
+            color: white;
+            background: var(--primary);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            background: var(--primary-dark);
+        }
+
+        .btn-light {
+            background: var(--card-solid);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .messages {
+            margin-bottom: 18px;
+        }
+
+        .alert {
+            background: var(--card-solid);
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--primary);
+            border-radius: 16px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            box-shadow: 0 10px 25px rgba(33, 50, 90, 0.08);
+        }
+
+        .status-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 20px;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow);
+        }
+
+        .status-card.error {
+            background: var(--warning-bg);
+            color: var(--warning-text);
+        }
+
+        .status-card.success {
+            background: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .status-card h3 {
+            margin: 0 0 10px;
+        }
+
+        .status-card ul {
+            margin-bottom: 0;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 330px;
+            gap: 22px;
+            align-items: start;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(14px);
+        }
+
+        fieldset {
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 0 0 20px;
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        body.dark-theme fieldset {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        legend {
+            padding: 0 10px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 14px;
+            outline: none;
+            background: var(--card-solid);
+            color: var(--text);
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 124, 255, 0.16);
+        }
+
+        .save-box {
+            text-align: center;
+            margin-top: 18px;
+        }
+
+        .side-card {
+            position: sticky;
+            top: 20px;
+        }
+
+        .side-card h3 {
+            margin-top: 0;
+        }
+
+        .download-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .download-list .btn {
+            width: 100%;
+        }
+
+        .history {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+        }
+
+        .history ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 10px;
+        }
+
+        .history li {
+            padding: 12px;
+            border-radius: 14px;
+            background: rgba(79, 124, 255, 0.08);
+            border: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .history-date {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-actions {
+                justify-content: flex-start;
+            }
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .side-card {
+                position: static;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .hero-left {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .hero h1 {
+                font-size: 25px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page {
+                width: min(100% - 18px, 1180px);
+                padding-top: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <header class="hero">
+            <div class="hero-left">
+                <img class="logo" src="{% static 'logo2.png' %}" alt="Логотип">
+
+                <div>
+                    <h1>Профиль практиканта</h1>
+                    <p>Заполни данные один раз — потом скачивай готовые документы.</p>
+                </div>
+            </div>
+
+            <div class="hero-actions">
+                <button type="button" class="btn btn-light" onclick="toggleTheme()">
+                    🌙 Тема
+                </button>
+
+                {% if user.is_superuser %}
+                    <a href="/admin/" class="btn btn-danger">🔧 Админ-панель</a>
+                {% endif %}
+            </div>
+        </header>
+
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if profile_errors %}
+            <div class="status-card error">
+                <h3>⚠ Профиль заполнен не полностью</h3>
+                <p>Перед скачиванием документов нужно заполнить:</p>
+
+                <ul>
+                    {% for error in profile_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <div class="status-card success">
+                <h3>✅ Профиль заполнен полностью</h3>
+                <p>Теперь можно скачивать документы по отдельности или одним ZIP-архивом.</p>
+            </div>
+        {% endif %}
+
+        <div class="layout">
+            <main class="card">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <fieldset>
+                        <legend>📋 Данные студента</legend>
+
+                        <div class="form-grid">
+                            <div>
+                                <label for="fio">ФИО</label>
+                                <input type="text" id="fio" name="fio" value="{{ profile.fio|default:'' }}" required>
+                            </div>
+
+                            <div>
+                                <label for="spec">Специальность</label>
+                                <select id="spec" name="spec" required>
+                                    <option value="">Выберите специальность</option>
+                                    {% for value, label in specialty_choices %}
+                                        <option value="{{ value }}" {% if profile.spec == value %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div>
+                                <label for="grupa">Группа</label>
+                                <select id="grupa" name="grupa" required>
+                                    <option value="">Выберите группу</option>
+
+                                    {% for value, label in group_choices %}
+                                        <option value="{{ value }}" {% if profile.grupa == value %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div>
+                                <label for="kurs">Курс</label>
+                                <select id="kurs" name="kurs">
+                                    <option value="">Выберите курс</option>
+                                    {% for value, label in kurs_choices %}
+                                        <option value="{{ value }}" {% if profile.kurs == value %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="obuch">Форма обучения</label>
+                                <select id="obuch" name="obuch" required>
+                                    <option value="">Выберите форму обучения</option>
+                                    {% for value, label in obuch_choices %}
+                                        <option value="{{ value }}" {% if profile.obuch == value %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="vid">Тип практики</label>
+                                <select id="vid" name="vid" required>
+                                    <option value="">Выберите тип практики</option>
+                                    <option value="Учебная" {% if profile.vid == 'Учебная' %}selected{% endif %}>Учебная</option>
+                                    <option value="Производственная" {% if profile.vid == 'Производственная' %}selected{% endif %}>Производственная</option>
+                                </select>
+                            </div>
+
+                            <div class="full-width">
+                                <label for="kod">Профессиональный модуль</label>
+                                <input type="text" id="kod" name="kod" value="{{ profile.kod|default:'' }}" required>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>🏢 Данные практики</legend>
+
+                        <div class="form-grid">
+                            <div class="full-width">
+                                <label for="mesto">Наименование организации</label>
+                                <input type="text" id="mesto" name="mesto" value="{{ profile.mesto|default:'' }}" required>
+                            </div>
+
+                            <div class="full-width">
+                                <label for="adress">Адрес организации</label>
+                                <input type="text" id="adress" name="adress" value="{{ profile.adress|default:'' }}" required>
+                            </div>
+
+                            <div class="full-width">
+                                <label for="library">Подразделение / место практики</label>
+                                <input type="text" id="library" name="library" value="{{ profile.library|default:'' }}" required>
+                            </div>
+
+                            <div class="full-width">
+                                <label for="ruka">Руководитель практики</label>
+                                <input type="text" id="ruka" name="ruka" value="{{ profile.ruka|default:'' }}" required>
+                            </div>
+
+                            <div class="full-width">
+                                <label for="boss_organization">Руководитель от организации</label>
+                                <input type="text" id="boss_organization" name="boss_organization" value="{{ profile.boss_organization|default:'' }}" required>
+                            </div>
+
+                            <div>
+                                <label for="date_begin">Дата начала практики</label>
+                                <input type="date" id="date_begin" name="date_begin" value="{{ profile.date_begin|date:'Y-m-d' }}">
+                            </div>
+
+                            <div>
+                                <label for="date_finish">Дата окончания практики</label>
+                                <input type="date" id="date_finish" name="date_finish" value="{{ profile.date_finish|date:'Y-m-d' }}">
+                            </div>
+
+                            <div>
+                                <label for="number">Количество выходов</label>
+                                <input type="number" id="number" name="number" min="0" value="{{ profile.number|default:'' }}">
+                            </div>
+
+                            <div>
+                                <label for="not_day_one">Пропущено дней</label>
+                                <input type="number" id="not_day_one" name="not_day_one" min="0" value="{{ profile.not_day_one|default:'' }}">
+                            </div>
+
+                            <div>
+                                <label for="not_day_two">По неуважительной причине</label>
+                                <input type="number" id="not_day_two" name="not_day_two" min="0" value="{{ profile.not_day_two|default:'' }}">
+                            </div>
+
+                            <div class="full-width">
+                                <label for="good">Качество выполнения работы</label>
+                                <textarea id="good" name="good" rows="4" required>{{ profile.good|default:'' }}</textarea>
+                            </div>
+
+                            <div>
+                                <label for="attestation_date">Дата аттестации</label>
+                                <input type="date" id="attestation_date" name="attestation_date" value="{{ profile.attestation_date|date:'Y-m-d' }}">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <div class="save-box">
+                        <button type="submit" class="btn btn-success">💾 Сохранить данные</button>
+                    </div>
+                </form>
+            </main>
+
+            <aside class="card side-card">
+                <h3>📄 Документы</h3>
+
+                <div class="download-list">
+                    <button onclick="location.href='/download/attestation-educational/'" class="btn">
+                        📖 Учебная практика
+                    </button>
+
+                    <button onclick="location.href='/download/attestation-industrial/'" class="btn">
+                        📘 Производственная практика
+                    </button>
+
+                    <button onclick="location.href='/download/characteristic/'" class="btn">
+                        📋 Характеристика
+                    </button>
+
+                    <button onclick="location.href='/download/all/'" class="btn btn-success">
+                        📦 Скачать всё ZIP
+                    </button>
+                </div>
+
+                <div class="history">
+                    <h3>🕘 История</h3>
+
+                    {% if history %}
+                        <ul>
+                            {% for item in history %}
+                                <li>
+                                    <span class="history-date">{{ item.created_at|date:"d.m.Y H:i" }}</span>
+                                    {{ item.document_name }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p style="color: var(--muted);">Истории пока нет.</p>
+                    {% endif %}
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        function applyTheme() {
+            const theme = localStorage.getItem('theme');
+
+            if (theme === 'dark') {
+                document.body.classList.add('dark-theme');
+            } else {
+                document.body.classList.remove('dark-theme');
+            }
+        }
+
+        function toggleTheme() {
+            if (document.body.classList.contains('dark-theme')) {
+                localStorage.setItem('theme', 'light');
+            } else {
+                localStorage.setItem('theme', 'dark');
+            }
+
+            applyTheme();
+        }
+
+        applyTheme();
+    </script>
+</body>
+</html>

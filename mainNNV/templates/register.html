@@ -1,0 +1,190 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="icon" href="{% static 'logo.ico' %}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(255, 255, 255, 0.25), transparent 30%),
+                linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 460px;
+            background: white;
+            border-radius: 28px;
+            padding: 36px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.22);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .auth-icon {
+            font-size: 54px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            margin: 0;
+            color: #4f7cff;
+            font-size: 30px;
+        }
+
+        .subtitle {
+            margin-top: 8px;
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        form p {
+            margin: 0 0 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid #d7ddf0;
+            font-size: 16px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.16);
+        }
+
+        .helptext,
+        form ul {
+            display: none;
+        }
+
+        .mini-help {
+            margin: -8px 0 18px;
+            padding: 12px 14px;
+            background: #f5f7ff;
+            border: 1px solid #dbe4ff;
+            border-radius: 16px;
+            color: #4b5563;
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        .alert {
+            padding: 13px 15px;
+            border-radius: 16px;
+            background: #fff1f2;
+            color: #be123c;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .btn {
+            width: 100%;
+            border: none;
+            border-radius: 999px;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #ff6b86, #ffd33d);
+            color: white;
+            font-weight: 900;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 6px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(255, 107, 134, 0.35);
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .auth-links a {
+            color: #4f7cff;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-icon">📋</div>
+            <h1>Регистрация</h1>
+            <div class="subtitle">Создай аккаунт для заполнения профиля практиканта</div>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <p>
+                <label for="id_username">Имя пользователя</label>
+                {{ form.username }}
+            </p>
+
+            <p>
+                <label for="id_password1">Пароль</label>
+                {{ form.password1 }}
+            </p>
+
+            <div class="mini-help">
+                Пароль должен быть не слишком простым и содержать минимум 8 символов.
+            </div>
+
+            <p>
+                <label for="id_password2">Повторите пароль</label>
+                {{ form.password2 }}
+            </p>
+
+            <button type="submit" class="btn">Зарегистрироваться</button>
+        </form>
+
+        <div class="auth-links">
+            <a href="/login/">Уже есть аккаунт? Войти</a>
+        </div>
+    </div>
+</body>
+</html>

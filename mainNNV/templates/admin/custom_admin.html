@@ -1,0 +1,350 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+
+<style>
+    .dashboard-wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .dashboard-hero {
+        background: linear-gradient(135deg, #4f7cff, #6c8dff);
+        color: white;
+        border-radius: 26px;
+        padding: 32px;
+        margin-bottom: 24px;
+        box-shadow: 0 18px 45px rgba(79, 124, 255, 0.28);
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .dashboard-hero h1 {
+        margin: 0;
+        font-size: 34px;
+        font-weight: 900;
+    }
+
+    .dashboard-hero p {
+        margin: 8px 0 0;
+        opacity: 0.9;
+        font-size: 16px;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .hero-btn {
+        background: white;
+        color: #345ee8 !important;
+        padding: 12px 18px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 800;
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        background: white;
+        border: 1px solid #dbe4ff;
+        border-radius: 22px;
+        padding: 22px;
+        box-shadow: 0 14px 35px rgba(33, 50, 90, 0.11);
+    }
+
+    .stat-icon {
+        font-size: 30px;
+        margin-bottom: 10px;
+    }
+
+    .stat-number {
+        font-size: 32px;
+        font-weight: 900;
+        color: #172033;
+    }
+
+    .stat-label {
+        color: #667085;
+        margin-top: 4px;
+    }
+
+    .admin-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 22px;
+    }
+
+    .panel {
+        background: white;
+        border: 1px solid #dbe4ff;
+        border-radius: 22px;
+        padding: 22px;
+        box-shadow: 0 14px 35px rgba(33, 50, 90, 0.11);
+        margin-bottom: 22px;
+    }
+
+    .panel h2 {
+        margin: 0 0 16px;
+        font-size: 22px;
+        color: #172033;
+    }
+
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .action-card {
+        display: block;
+        text-decoration: none;
+        padding: 18px;
+        border-radius: 18px;
+        background: #f5f7ff;
+        border: 1px solid #dbe4ff;
+        transition: 0.2s;
+        color: #172033 !important;
+        font-weight: 800;
+    }
+
+    .action-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 25px rgba(79, 124, 255, 0.18);
+        background: #eef3ff;
+    }
+
+    .action-card span {
+        display: block;
+        font-size: 26px;
+        margin-bottom: 8px;
+    }
+
+    .nice-table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border-radius: 16px;
+    }
+
+    .nice-table th,
+    .nice-table td {
+        padding: 13px 12px;
+        border-bottom: 1px solid #edf1ff;
+        text-align: left;
+    }
+
+    .nice-table th {
+        background: #f5f7ff;
+        color: #172033;
+        font-weight: 900;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-weight: 800;
+        font-size: 12px;
+    }
+
+    .badge-green {
+        background: #ecfdf5;
+        color: #047857;
+    }
+
+    .badge-blue {
+        background: #eef3ff;
+        color: #345ee8;
+    }
+
+    .badge-red {
+        background: #fff1f2;
+        color: #be123c;
+    }
+
+    @media (max-width: 900px) {
+        .dashboard-hero {
+            display: block;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .admin-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .quick-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-buttons {
+            margin-top: 18px;
+        }
+    }
+</style>
+
+<div class="dashboard-wrap">
+
+    <div class="dashboard-hero">
+        <div>
+            <h1>Панель управления</h1>
+            <p>Управление пользователями, профилями, шаблонами и документами.</p>
+        </div>
+
+        <div class="hero-buttons">
+            <a class="hero-btn" href="/profile/">👤 На сайт</a>
+            <a class="hero-btn" href="{% url 'admin:auth_user_add' %}">➕ Создать пользователя</a>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-number">{{ user_count }}</div>
+            <div class="stat-label">Всего пользователей</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-number">{{ active_users }}</div>
+            <div class="stat-label">Активных пользователей</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">👑</div>
+            <div class="stat-number">{{ superusers }}</div>
+            <div class="stat-label">Суперпользователей</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">📄</div>
+            <div class="stat-number">{{ template_count }}</div>
+            <div class="stat-label">Шаблонов DOCX</div>
+        </div>
+    </div>
+
+    <div class="admin-grid">
+        <div>
+            <div class="panel">
+                <h2>⚡ Быстрые действия</h2>
+
+                <div class="quick-actions">
+                    <a class="action-card" href="{% url 'admin:auth_user_changelist' %}">
+                        <span>👥</span>
+                        Пользователи
+                    </a>
+
+                    <a class="action-card" href="{% url 'admin:mainNNV_profile_changelist' %}">
+                        <span>📋</span>
+                        Профили практикантов
+                    </a>
+
+                    <a class="action-card" href="{% url 'admin:template_list' %}">
+                        <span>📁</span>
+                        Шаблоны документов
+                    </a>
+
+                    <a class="action-card" href="{% url 'admin:generate_documents_page' %}">
+                        <span>📦</span>
+                        Генерация документов
+                    </a>
+
+                    <a class="action-card" href="{% url 'admin:mainNNV_downloadhistory_changelist' %}">
+                        <span>🕘</span>
+                        История скачиваний
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>👥 Последние пользователи</h2>
+
+                <table class="nice-table">
+                    <thead>
+                        <tr>
+                            <th>Логин</th>
+                            <th>Email</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for u in recent_users %}
+                            <tr>
+                                <td>{{ u.username }}</td>
+                                <td>{{ u.email|default:"—" }}</td>
+                                <td>
+                                    {% if u.is_superuser %}
+                                        <span class="badge badge-red">Суперпользователь</span>
+                                    {% elif u.is_staff %}
+                                        <span class="badge badge-blue">Персонал</span>
+                                    {% else %}
+                                        <span class="badge badge-green">Студент</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3">Пользователей пока нет.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div>
+            <div class="panel">
+                <h2>📁 Шаблоны</h2>
+
+                <table class="nice-table">
+                    <thead>
+                        <tr>
+                            <th>Файл</th>
+                            <th>Размер</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for template in templates %}
+                            <tr>
+                                <td>{{ template.name }}</td>
+                                <td>{{ template.size }} байт</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="2">Шаблонов пока нет.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="panel">
+                <h2>📌 Подсказка</h2>
+                <p>
+                    Для массовой выдачи документов открой раздел
+                    <b>“Генерация документов”</b>, выбери группу или весь колледж
+                    и скачай ZIP-архив.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
